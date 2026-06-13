@@ -367,8 +367,9 @@ Your platform will be live at:
 **Guilherme dos Santos**
 Software Engineer — Backend (Java / Spring Boot) | Software Architecture enthusiast
 
-- 🔗 LinkedIn: [linkedin.com/in/your-profile](https://linkedin.com/in/your-profile)
-- 💻 GitHub: [github.com/your-username](https://github.com/your-username)
+- 🔗 LinkedIn: https://www.linkedin.com/in/guilhermedevjava/
+- 💻 GitHub: https://github.com/GuilhermeDoSantoss
+- Deploy: https://site-treino-bb.vercel.app/
 - 📍 Rio de Janeiro, Brazil
 
 ---
