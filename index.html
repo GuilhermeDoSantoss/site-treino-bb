@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>BB·TI — Plataforma Completa de Estudos</title>
+<link rel="stylesheet" href="style.css"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+<!-- Confetti canvas — hidden until triggered -->
+<canvas id="confettiCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;display:none"></canvas>
+<div class="toast-wrap" id="toastWrap"></div>
+<div class="xp-float" id="xpFloat"></div>
+
+<!-- ═══ SIDEBAR ═══ -->
+<aside class="sidebar" id="sidebar">
+  <div class="sb-brand">
+    <span class="sb-hex">⬡</span>
+    <div><div class="sb-title">BB<span class="sb-ac">·TI</span></div><div class="sb-sub">Study Platform 2025</div></div>
+  </div>
+  <div class="sb-xp-block">
+    <div class="sb-lv-badge" id="sbLvBadge">LV 1</div>
+    <div class="sb-xp-info">
+      <div class="sb-lv-name" id="sbLvName">Beginner</div>
+      <div class="sb-xp-track"><div class="sb-xp-fill" id="sbXpFill" style="width:0%"></div></div>
+      <div class="sb-xp-nums"><span id="sbXpCur">0</span> / <span id="sbXpNxt">500</span> XP</div>
+    </div>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-nl">VISÃO GERAL</div>
+    <a class="ni active" data-pg="overview">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+      <span>Overview</span>
+    </a>
+    <a class="ni" data-pg="weekly">
+      <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      <span>Plano Semanal</span>
+    </a>
+    <a class="ni" data-pg="subjects">
+      <svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+      <span>Matérias TI</span>
+    </a>
+    <div class="sb-nl">LÍNGUAS & GERAL</div>
+    <a class="ni" data-pg="portuguese">
+      <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+      <span>Português</span>
+    </a>
+    <a class="ni" data-pg="english">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+      <span>English</span>
+    </a>
+    <a class="ni" data-pg="mathematics">
+      <svg viewBox="0 0 24 24"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg>
+      <span>Matemática</span>
+    </a>
+    <div class="sb-nl">PRÁTICA</div>
+    <a class="ni" data-pg="practice">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      <span>Questões</span>
+      <span class="nb">200+</span>
+    </a>
+    <a class="ni" data-pg="mockexam">
+      <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+      <span>Simulado</span>
+    </a>
+    <a class="ni" data-pg="essay">
+      <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      <span>Redação</span>
+    </a>
+    <div class="sb-nl">RECURSOS</div>
+    <a class="ni" data-pg="resources">
+      <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+      <span>Recursos</span>
+    </a>
+    <a class="ni" data-pg="analysis">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      <span>Análise BB 2023</span>
+    </a>
+    <a class="ni" data-pg="timer">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+      <span>Pomodoro</span>
+    </a>
+    <a class="ni" data-pg="gamification">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
+      <span>Conquistas</span>
+    </a>
+    <a class="ni" data-pg="journal">
+      <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+      <span>Diário</span>
+    </a>
+    <a class="ni" data-pg="analytics">
+      <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      <span>Analytics</span>
+    </a>
+  </nav>
+  <div class="sb-foot">
+    <div class="sb-countdown">
+      <div class="sc-lbl">Prova estimada em</div>
+      <div class="sc-days" id="examDays">—</div>
+      <div class="sc-sub">dias</div>
+    </div>
+    <div class="sb-streak">🔥 <span id="sbStreak">0</span> dias seguidos</div>
+  </div>
+</aside>
+
+<!-- ═══ MAIN ═══ -->
+<main class="main" id="main">
+
+  <header class="topbar">
+    <button class="tb-menu" id="menuBtn" aria-label="Menu"><span></span><span></span><span></span></button>
+    <div class="tb-search">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="searchInput" placeholder="Buscar tópicos, questões… (⌘K)" autocomplete="off"/>
+      <kbd>⌘K</kbd>
+    </div>
+    <div class="tb-right">
+      <div class="tb-streak">🔥 <span id="topStreak">0</span></div>
+      <div class="tb-xp">⚡ <span id="topXP">0</span> XP</div>
+      <div class="tb-date" id="topDate"></div>
+    </div>
+  </header>
+
+  <!-- ══ OVERVIEW ══ -->
+  <section class="page active" id="pg-overview">
+    <div class="ph"><h1>Dashboard <span class="hl">Overview</span></h1><p>Banco do Brasil — Escriturário Agente de Tecnologia</p></div>
+    <div class="level-hero" id="lvHero">
+      <div class="lh-l">
+        <div class="lh-icon" id="lhIcon">🌱</div>
+        <div><div class="lh-lv" id="lhLv">Level 1</div><div class="lh-name" id="lhName">Beginner</div></div>
+      </div>
+      <div class="lh-bar-wrap">
+        <div class="lh-track"><div class="lh-fill" id="lhFill" style="width:0%"></div></div>
+        <div class="lh-hint"><span id="lhCur">0</span> / <span id="lhMax">500</span> XP — próximo nível</div>
+      </div>
+      <div class="lh-total"><div class="lh-txp" id="lhTXp">0</div><div class="lh-tl">XP Total</div></div>
+    </div>
+    <div class="stats-row" id="ovStats"></div>
+    <div class="motiv-bar">
+      <span>💡</span>
+      <span class="motiv-txt" id="motivTxt">Carregando...</span>
+      <button class="motiv-btn" id="motivBtn" title="Nova frase">↻</button>
+    </div>
+    <!-- CHARTS: each canvas lives inside .chart-wrap with explicit height — CRITICAL FIX -->
+    <div class="ch2">
+      <div class="chbox">
+        <div class="cht">Progresso Semanal</div>
+        <div class="chart-wrap short"><canvas id="ovWeekChart"></canvas></div>
+      </div>
+      <div class="chbox">
+        <div class="cht">Por Área (TI)</div>
+        <div class="chart-wrap short"><canvas id="ovCatChart"></canvas></div>
+      </div>
+    </div>
+    <div class="ss-title">Progresso por Grupo</div>
+    <div class="prog-list" id="ovProgList"></div>
+    <div class="ss-title" style="margin-top:20px">⚠️ Recomendações de Estudo</div>
+    <div class="rec-list" id="ovRecList"></div>
+  </section>
+
+  <!-- ══ WEEKLY ══ -->
+  <section class="page" id="pg-weekly">
+    <div class="ph"><h1>Plano <span class="hl">Semanal</span></h1><p>Cronograma completo — segunda a domingo</p></div>
+    <div class="weekly-grid" id="weeklyGrid"></div>
+  </section>
+
+  <!-- ══ SUBJECTS TI ══ -->
+  <section class="page" id="pg-subjects">
+    <div class="ph"><h1>Matérias <span class="hl">TI</span></h1><p>Tópicos de tecnologia — marque conforme estudar</p></div>
+    <div class="filter-bar" id="filterBarTI"></div>
+    <div class="subs-grid" id="subsGridTI"></div>
+  </section>
+
+  <!-- ══ PORTUGUÊS ══ -->
+  <section class="page" id="pg-portuguese">
+    <div class="ph"><h1>Língua <span class="hl">Portuguesa</span></h1><p>Interpretação, gramática e sintaxe para concursos</p></div>
+    <div class="lang-layout">
+      <div class="lang-left">
+        <div class="filter-bar" id="filterBarPT"></div>
+        <div class="subs-grid" id="subsGridPT"></div>
+      </div>
+      <div class="lang-right">
+        <div class="lang-stat-card">
+          <div class="cht">Performance Portuguesa</div>
+          <div class="chart-wrap" style="height:160px"><canvas id="ptChart"></canvas></div>
+        </div>
+        <div class="tip-box">
+          <div class="tip-title">💡 Dica do Dia</div>
+          <div class="tip-body" id="ptTip"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ ENGLISH ══ -->
+  <section class="page" id="pg-english">
+    <div class="ph"><h1>English <span class="hl">Language</span></h1><p>Technical English for IT professionals &amp; public exams</p></div>
+    <div class="lang-layout">
+      <div class="lang-left">
+        <div class="filter-bar" id="filterBarEN"></div>
+        <div class="subs-grid" id="subsGridEN"></div>
+      </div>
+      <div class="lang-right">
+        <div class="lang-stat-card">
+          <div class="cht">English Performance</div>
+          <div class="chart-wrap" style="height:160px"><canvas id="enChart"></canvas></div>
+        </div>
+        <div class="tip-box">
+          <div class="tip-title">💡 Daily Tip</div>
+          <div class="tip-body" id="enTip"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ MATHEMATICS ══ -->
+  <section class="page" id="pg-mathematics">
+    <div class="ph"><h1>Matemática & <span class="hl">Raciocínio Lógico</span></h1><p>Aritmética, juros, lógica e estatística para concursos</p></div>
+    <div class="lang-layout">
+      <div class="lang-left">
+        <div class="filter-bar" id="filterBarMAT"></div>
+        <div class="subs-grid" id="subsGridMAT"></div>
+      </div>
+      <div class="lang-right">
+        <div class="lang-stat-card">
+          <div class="cht">Performance Matemática</div>
+          <div class="chart-wrap" style="height:160px"><canvas id="matChart"></canvas></div>
+        </div>
+        <div class="tip-box">
+          <div class="tip-title">📐 Dica do Dia</div>
+          <div class="tip-body" id="matTip"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ PRACTICE ══ -->
+  <section class="page" id="pg-practice">
+    <div class="ph"><h1>Banco de <span class="hl">Questões</span></h1><p>Practice Center — 200+ questões com explicações detalhadas</p></div>
+    <div class="quiz-cfg" id="quizCfg">
+      <div class="qcf-row">
+        <div class="qcf-grp"><label>Matéria</label><select id="quizSubj"><option value="all">Todas as matérias</option></select></div>
+        <div class="qcf-grp"><label>Dificuldade</label>
+          <select id="quizDiff"><option value="all">Todas</option><option value="easy">Fácil</option><option value="medium">Médio</option><option value="hard">Difícil</option></select>
+        </div>
+        <div class="qcf-grp"><label>Quantidade</label>
+          <select id="quizQty"><option value="5">5 questões</option><option value="10" selected>10 questões</option><option value="20">20 questões</option><option value="all">Todas</option></select>
+        </div>
+        <button class="btn-p" id="quizStartBtn">▶ Iniciar Quiz</button>
+      </div>
+    </div>
+    <div class="quiz-area hidden" id="quizArea">
+      <div class="quiz-hdr">
+        <div>
+          <div class="qhdr-num" id="qNum">1/10</div>
+          <div class="quiz-prog-track"><div class="quiz-prog-fill" id="qProgFill" style="width:0%"></div></div>
+        </div>
+        <div class="qhdr-meta">
+          <span class="diff-badge" id="qDiff"></span>
+          <span class="cat-badge" id="qCat"></span>
+          <button class="btn-danger-sm" id="qAbort" title="Encerrar quiz">✕</button>
+        </div>
+      </div>
+      <div class="quiz-q" id="quizQ"></div>
+      <div class="quiz-opts" id="quizOpts"></div>
+      <div class="quiz-exp hidden" id="quizExp"></div>
+      <div class="quiz-foot">
+        <div class="qf-score">Score: <span id="qScore">0</span></div>
+        <button class="btn-p" id="qNext" disabled>Próxima →</button>
+      </div>
+    </div>
+    <div class="quiz-results hidden" id="quizResults"></div>
+  </section>
+
+  <!-- ══ MOCK EXAM ══ -->
+  <section class="page" id="pg-mockexam">
+    <div class="ph"><h1>Simulado <span class="hl">Completo</span></h1><p>Simulador realista de prova pública — cronometrado</p></div>
+    <div class="mock-cfg" id="mockCfg">
+      <div class="mock-modes" id="mockModes"></div>
+      <button class="btn-p btn-lg" id="mockStartBtn">🚀 Iniciar Simulado</button>
+    </div>
+    <div class="mock-area hidden" id="mockArea">
+      <div class="mock-top" id="mockTimerBox">
+        <div class="mt-info"><span id="mockQInfo">0/60</span><div class="mt-prog"><div class="mt-fill" id="mockFill"></div></div></div>
+        <div class="mt-timer">⏱ <span id="mockTimer">00:00</span></div>
+        <button class="btn-danger" id="mockFinish">Finalizar Prova</button>
+      </div>
+      <div class="mock-q-wrap" id="mockQWrap"></div>
+      <div class="mock-nav">
+        <button class="btn-s" id="mockPrev">← Anterior</button>
+        <div class="mock-map" id="mockMap"></div>
+        <button class="btn-s" id="mockNext">Próxima →</button>
+      </div>
+    </div>
+    <div class="mock-report hidden" id="mockReport"></div>
+  </section>
+
+  <!-- ══ ESSAY ══ -->
+  <section class="page" id="pg-essay">
+    <div class="ph"><h1>Laboratório de <span class="hl">Redação</span></h1><p>Treine, avalie e melhore sua redação para o BB</p></div>
+    <div class="essay-tabs">
+      <button class="etab active" data-etab="write">✏️ Escrever</button>
+      <button class="etab" data-etab="dashboard">📊 Dashboard</button>
+      <button class="etab" data-etab="guide">📖 Guia</button>
+      <button class="etab" data-etab="topics">🎯 Temas</button>
+      <button class="etab" data-etab="tips">💡 Dicas</button>
+    </div>
+    <div class="essay-panel active" id="ep-write">
+      <div class="essay-write-layout">
+        <div class="essay-editor-wrap">
+          <div class="ee-header">
+            <input class="ee-title" id="essayTitle" type="text" placeholder="Título da redação…" autocomplete="off"/>
+            <div class="ee-meta">
+              <select id="essayTopic"><option value="">Escolha um tema...</option></select>
+              <span class="ee-wc" id="essayWC">0 palavras</span>
+            </div>
+          </div>
+          <textarea id="essayText" class="essay-textarea" placeholder="Introdução: Apresente o tema e sua tese...&#10;&#10;Desenvolvimento 1: Primeiro argumento com exemplos...&#10;&#10;Desenvolvimento 2: Segundo argumento, aprofundamento...&#10;&#10;Conclusão: Síntese e proposta de solução..."></textarea>
+          <div class="ee-actions">
+            <button class="btn-s" id="essayClear">🗑 Limpar</button>
+            <button class="btn-p" id="essayEval">🔍 Avaliar</button>
+            <button class="btn-p" id="essaySave">💾 Salvar</button>
+          </div>
+          <div class="essay-checklist" id="essayChecklist"></div>
+          <div class="essay-feedback hidden" id="essayFeedback"></div>
+        </div>
+        <div class="essay-sidebar-tips">
+          <div class="est-title">⏱ Gestão do Tempo</div>
+          <div class="est-items">
+            <div class="esti">📋 Planejamento: <strong>5 min</strong></div>
+            <div class="esti">✏️ Introdução: <strong>10 min</strong></div>
+            <div class="esti">📝 Desenvolvimento 1: <strong>15 min</strong></div>
+            <div class="esti">📝 Desenvolvimento 2: <strong>15 min</strong></div>
+            <div class="esti">🏁 Conclusão: <strong>10 min</strong></div>
+            <div class="esti">✔️ Revisão: <strong>5 min</strong></div>
+          </div>
+          <div class="est-title" style="margin-top:16px">📏 Estrutura Ideal</div>
+          <div class="est-items">
+            <div class="esti">Intro: <strong>3-4 linhas</strong></div>
+            <div class="esti">Des. 1: <strong>5-6 linhas</strong></div>
+            <div class="esti">Des. 2: <strong>5-6 linhas</strong></div>
+            <div class="esti">Conclusão: <strong>3-4 linhas</strong></div>
+            <div class="esti">Total: <strong>20-30 linhas</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="essay-panel" id="ep-dashboard">
+      <div class="essay-dash" id="essayDash"></div>
+      <div class="ss-title">Histórico de Redações</div>
+      <div id="essayHistory" class="essay-history"></div>
+    </div>
+    <div class="essay-panel" id="ep-guide">
+      <div class="essay-guide" id="essayGuide"></div>
+    </div>
+    <div class="essay-panel" id="ep-topics">
+      <div class="topics-filter">
+        <button class="filter-btn active" data-tf="all">Todos</button>
+        <button class="filter-btn" data-tf="beginner">Iniciante</button>
+        <button class="filter-btn" data-tf="intermediate">Intermediário</button>
+        <button class="filter-btn" data-tf="advanced">Avançado</button>
+      </div>
+      <div class="essay-topics-grid" id="essayTopicsGrid"></div>
+    </div>
+    <div class="essay-panel" id="ep-tips">
+      <div class="essay-tips-grid" id="essayTipsGrid"></div>
+    </div>
+  </section>
+
+  <!-- ══ RESOURCES ══ -->
+  <section class="page" id="pg-resources">
+    <div class="ph"><h1>Recursos de <span class="hl">Aprendizado</span></h1><p>Vídeos, cursos, docs e referências selecionadas</p></div>
+    <div class="resources-grid" id="resourcesGrid"></div>
+  </section>
+
+  <!-- ══ ANALYSIS ══ -->
+  <section class="page" id="pg-analysis">
+    <div class="ph"><h1>Análise BB <span class="hl">2023</span></h1><p>Edital, distribuição de questões e prioridades de estudo</p></div>
+    <div class="ch2">
+      <div class="chbox full">
+        <div class="cht">Distribuição de Questões por Área</div>
+        <div class="chart-wrap" style="height:160px"><canvas id="anaDistChart"></canvas></div>
+      </div>
+      <div class="chbox">
+        <div class="cht">Dificuldade por Área</div>
+        <div class="chart-wrap tall"><canvas id="anaDiffChart"></canvas></div>
+      </div>
+      <div class="chbox">
+        <div class="cht">Foco de Estudo Recomendado</div>
+        <div class="chart-wrap tall"><canvas id="anaFocusChart"></canvas></div>
+      </div>
+    </div>
+    <div class="analysis-insights" id="analysisInsights"></div>
+  </section>
+
+  <!-- ══ TIMER ══ -->
+  <section class="page" id="pg-timer">
+    <div class="ph"><h1>Timer <span class="hl">Pomodoro</span></h1><p>Foco · Pausas · Deep Work Mode</p></div>
+    <div class="timer-layout">
+      <div class="timer-card">
+        <div class="ttabs">
+          <button class="ttab active" data-tm="pomodoro">Pomodoro 25</button>
+          <button class="ttab" data-tm="short">Pausa 5</button>
+          <button class="ttab" data-tm="long">Pausa 15</button>
+          <button class="ttab" data-tm="deep">Deep Work 50</button>
+        </div>
+        <div class="timer-ring-wrap">
+          <svg class="tsvg" viewBox="0 0 200 200" aria-hidden="true">
+            <circle class="tr-bg" cx="100" cy="100" r="85" fill="none" stroke-width="8"/>
+            <circle class="tr-fill" id="timerRing" cx="100" cy="100" r="85" fill="none" stroke-width="8"
+              stroke-dasharray="533.8" stroke-dashoffset="0" transform="rotate(-90 100 100)"/>
+          </svg>
+          <div class="timer-center">
+            <div class="timer-time" id="timerTime">25:00</div>
+            <div class="timer-lbl" id="timerLbl">FOCO</div>
+          </div>
+        </div>
+        <div class="timer-btns">
+          <button class="tbtn sec" id="tReset" title="Reiniciar">↺</button>
+          <button class="tbtn pri" id="tStart">▶ Iniciar</button>
+          <button class="tbtn sec" id="tSkip" title="Pular">⏭</button>
+        </div>
+        <div class="timer-subj-row">
+          <label>Estudando:</label>
+          <select id="timerSubj"><option value="">Selecione...</option></select>
+        </div>
+        <div class="timer-sess-row">
+          <span>Sessões hoje:</span>
+          <div id="timerDots" class="tdots"></div>
+          <span id="timerSessN">0</span>
+        </div>
+      </div>
+      <div class="timer-log-card">
+        <div class="tlc-title">Histórico de Sessões</div>
+        <div class="tlc-list" id="timerLog"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ GAMIFICATION ══ -->
+  <section class="page" id="pg-gamification">
+    <div class="ph"><h1>Conquistas & <span class="hl">Recompensas</span></h1><p>XP · Níveis · Badges · Recompensas semanais</p></div>
+    <div class="ss-title">Níveis de Progresso</div>
+    <div class="levels-grid" id="levelsGrid"></div>
+    <div class="ss-title" style="margin-top:24px">Recompensas Semanais</div>
+    <div class="rewards-grid" id="rewardsGrid"></div>
+    <div class="ss-title" style="margin-top:24px">Badges de Conquistas</div>
+    <div class="badges-grid" id="badgesGrid"></div>
+  </section>
+
+  <!-- ══ JOURNAL ══ -->
+  <section class="page" id="pg-journal">
+    <div class="ph"><h1>Diário de <span class="hl">Estudos</span></h1><p>Notas diárias · Revisões semanais · Relatórios mensais</p></div>
+    <div class="journal-layout">
+      <div class="journal-editor">
+        <div class="je-hdr">
+          <input type="date" id="jDate" class="j-date"/>
+          <select id="jType">
+            <option value="daily">Nota Diária</option>
+            <option value="weekly">Revisão Semanal</option>
+            <option value="monthly">Relatório Mensal</option>
+          </select>
+          <button class="btn-p" id="jSave">💾 Salvar</button>
+        </div>
+        <textarea id="jText" class="journal-ta" placeholder="O que estudei hoje?&#10;Pontos difíceis?&#10;O que preciso revisar?&#10;Conquistas do dia..."></textarea>
+      </div>
+      <div class="journal-entries">
+        <div class="je-title">Entradas Recentes</div>
+        <div id="jList" class="jlist"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ ANALYTICS ══ -->
+  <section class="page" id="pg-analytics">
+    <div class="ph"><h1>Analytics & <span class="hl">Performance</span></h1><p>Análise detalhada do seu progresso de estudos</p></div>
+    <div class="ch2">
+      <div class="chbox full">
+        <div class="cht">Tendência de Conclusão (7 dias)</div>
+        <div class="chart-wrap short"><canvas id="anaTrendChart"></canvas></div>
+      </div>
+      <div class="chbox">
+        <div class="cht">Radar de Preparação TI</div>
+        <div class="chart-wrap tall"><canvas id="anaRadar"></canvas></div>
+      </div>
+      <div class="chbox">
+        <div class="cht">Grupos de Estudo</div>
+        <div class="chart-wrap tall"><canvas id="anaPolar"></canvas></div>
+      </div>
+    </div>
+    <div class="ana-stats" id="anaStats"></div>
+  </section>
+
+</main>
+
+<div class="overlay" id="overlay"></div>
+
+<script src="data.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
